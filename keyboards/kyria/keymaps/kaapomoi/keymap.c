@@ -28,7 +28,8 @@ enum layers {
     _LOWER,
     _RAISE,
     _ADJUST,
-    _NUMBERS
+    _NUMBERS,
+    _GAMER
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -67,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_LOWER] = LAYOUT(
-      _______, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_PIPE,                                     _______, _______, _______, _______, _______, KC_BSLS,
+      _______, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_PIPE,                                     _______, _______, KC_BSLS, _______, _______, KC_BSLS,
       _______, KC_HASH, KC_DLR,  KC_LPRN, KC_RPRN, KC_GRV,                                      KC_PLUS, KC_MINS, KC_SLSH, KC_ASTR, KC_PERC, KC_QUOT,
       _______, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_TILD, _______, _______, _______, _______, KC_AMPR, KC_EQL,  KC_COMM, KC_DOT,  KC_SLSH, KC_MINS,
                                  _______, _______, _______, KC_SCLN, KC_EQL,  KC_EQL,  KC_SCLN, _______, _______, _______
@@ -111,9 +112,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       RGB_TOG, RGB_SAI, KC_7, KC_8, KC_9, _______,                                     KC_F9, KC_F10, KC_F11, KC_F12, _______, wpm_up,
       _______, RGB_HUI, KC_4, KC_5, KC_6, _______,                                     KC_F5, KC_F6, KC_F7, KC_F8, _______, wpm_down,
       _______, RGB_VAI, KC_1, KC_2, KC_3, _______, _______, _______, _______, _______, KC_F1, KC_F2, KC_F3, KC_F4, _______, _______,
-                         _______, KC_0, _______, _______, _______, _______, _______, _______, _______, _______
+                         TG(_GAMER), KC_0, _______, _______, _______, _______, _______, _______, _______, _______
     ),
-
+ /*
+ * Base Layer: QWERTY
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |RAIS/ESC|   Q  |   W  |   E  |   R  |   T  |                              |   Y  |   U  |   I  |   O  |   P  |  | \   |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * | LShift |   A  |   S  |  D   |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |  ' "   |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * | Ctrl   |   Z  |   X  |   C  |   V  |   B  |LShift|LShift|  |LShift|LShift|   N  |   M  | ,  < | . >  | /  ? |  - _   |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *  *                     | GUI  | Del  |  BSPC| Space| Enter|  | Enter| Bksp | Tab  | Del  | AltGr|
+ *                        |      |      | Alt  | Lower| Raise|  | Lower| Raise|      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [_GAMER] = LAYOUT(
+      KC_ESC ,       KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,                                                    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT,
+      KC_LSFT,                  KC_A,   KC_S,   KC_D,   KC_F,   KC_G,                                         KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_PLUS,
+      KC_LCTL,                  KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_LSFT,   KC_LCTL, TG(_GAMER), KC_RALT, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_MINS,
+             KC_LGUI, KC_TAB, KC_LALT, KC_SPC, LT(_RAISE, KC_ENT), LT(_LOWER, KC_ENT), KC_BSPC, KC_TAB,  KC_DEL, KC_ENT
+    ),
 // /*
 //  * Layer template
 //  *
@@ -265,23 +285,23 @@ static void render_anim(uint8_t _tap_speed, uint8_t _idle_speed) {
     }
 }
 
-static void render_status(void) {
+static void render_status(void) { 
     // QMK Logo and version information
     // render_qmk_logo();
     render_anim(tap_speed, idle_speed);
     oled_set_cursor(0,6);
     switch (get_highest_layer(layer_state)) {
         case _QWERTY:
-            oled_write_P(PSTR("      Default\n"), false);
+            oled_write_P(PSTR("        Default\n"), false);
             break;
         case _LOWER:
-            oled_write_P(PSTR("       Lower\n"), false);
+            oled_write_P(PSTR("        Lower\n"), false);
             break;
         case _RAISE:
-            oled_write_P(PSTR("       Raise\n"), false);
+            oled_write_P(PSTR("        Raise\n"), false);
             break;
         case _NUMBERS:
-            oled_write_P(PSTR("      Numbers\n"), false);
+            oled_write_P(PSTR("        Numbers\n"), false);
             break;
         default:
             oled_write_P(PSTR("Undefined\n"), false);

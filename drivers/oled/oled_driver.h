@@ -285,3 +285,9 @@ uint8_t oled_max_chars(void);
 
 // Returns the maximum number of lines that will fit on the oled
 uint8_t oled_max_lines(void);
+
+typedef void (*render_func)(uint8_t *data, void *user_args);
+
+// calls the passed function with the current data byte at the specified position along with the user supplied args
+// This allows for more complex rendering operations, such as transparency.
+void oled_byte_apply_func(uint8_t p_col, uint8_t line, render_func f, void *user_args);

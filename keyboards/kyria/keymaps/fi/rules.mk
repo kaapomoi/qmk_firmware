@@ -4,3 +4,4 @@ RGBLIGHT_ENABLE = yes      # Enable keyboard RGB underglow
 MOUSEKEY_ENABLE = no
 
 SRC += snow.c
+SRC += brush.c

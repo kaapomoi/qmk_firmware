@@ -1,0 +1,47 @@
+command mode:
+hjkl - left down up right movement, prefix with numbers to move that amount of lines/characters 
+i    - insert mode
+I    - insert mode in the beninging of the line
+a    - after insert mode
+A    - Append to end of line
+ESC  - normal mode
+gg   - goto top of file
+G    - goto end of file 
+{    - go up a block of code
+}    - go down a block of code
+dd   - delete a line and copy it to the clipboard
+u    - undo
+C(R) - redo
+yy   - copy line to clipboard
+y    - copy selection to clipboard
+p/P  - paste below / above
+v/V  - visual mode cursor / line
+o/O  - new line below / above -> insert mode
+w/b  - horizontal movement per word, SHIFT to go faster
+f/t  - goto given char
+  ;  - goto next instance of found char, if any
+%    - goto start/end of scope
+0    - goto start of line
+^^   - goto start of line, first non white space
+$    - goto end of line
+cw   - change word - deletes word from cursor begin and goes to insert mode 
+C    - change line from cursor begin
+D    - delete line from cursor begin
+ct   - remove until given char and goto insert mode 
+dt   - remove until given char
+*    - goto next instance of the word under the cursor
+zz   - center cursor
+
+~    - Toggle capitalisation
+.    - redo last command
+r    - replace character
+R    - replace until ESC
+<>   - indent cursor or selection
+
+macros:
+
+q    - macro mode
+any key to record macro 
+do sequence
+q    - save macro
+@key - play macro

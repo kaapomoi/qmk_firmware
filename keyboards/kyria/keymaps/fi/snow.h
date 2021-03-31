@@ -12,10 +12,12 @@
 
 #define DELTATIME 0.2f
 
+#define MIN_X 0
+#define MIN_Y 0
 #define MAX_X 127
 #define MAX_Y 63
 #define MIN_MASS 1
-#define MAX_MASS 5
+#define MAX_MASS 3
 
 #define VARIANCE 10
 

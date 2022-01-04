@@ -2,10 +2,10 @@
 #include "snow.h"
 
 #define DRAWCHANCE 100
-#define BOX_WIDTH 60
-#define BOX_HEIGHT 60
-#define BOX_TOP_LEFT_X 31
-#define BOX_TOP_LEFT_Y 1
+#define BOX_WIDTH 127
+#define BOX_HEIGHT 63
+#define BOX_TOP_LEFT_X 0
+#define BOX_TOP_LEFT_Y 0
 #define MAX_LINES_TILL_RESET 256
 
 struct brush

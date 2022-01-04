@@ -17,6 +17,7 @@
 
 #include <timer.h>
 #include "brush.h"
+#include "etch.h"
 
 // Row 1
 #define FI_SECT KC_GRV  // §
@@ -140,8 +141,16 @@
 
 #define FRAME_TIME 40
 
+void lenc_pressed(void);
+void renc_pressed(void);
+void lenc_c(void);
+void lenc_cw(void);
+void renc_c(void);
+void renc_cw(void);
+
 volatile uint16_t frame_timer = 0;
 
+uint8_t should_reset_etch = 0;
 
 typedef union {
   uint32_t raw;
@@ -152,6 +161,10 @@ typedef union {
 
 user_config_t user_config;
 
+enum enc_modes{
+    ARROW,
+    ETCH
+}enc_mode;
 
 enum layers {
     _QWERTY = 0,
@@ -168,7 +181,9 @@ enum custom_keycodes {
     K_UNDO,
     K_REDO,
     K_RGBE,
-    K_COLN
+    K_COLN,
+    K_LENC,
+    K_RENC
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -190,7 +205,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_ESC , FI_Q,   FI_W,   FI_E,   FI_R,   FI_T,                                                       FI_Y,    FI_U,    FI_I,    FI_O,   FI_P,    FI_PLUS,
       KC_LSFT, FI_A,   FI_S,   FI_D,   FI_F,   FI_G,                                                       FI_H,    FI_J,    FI_K,    FI_L,   K_COLN,  FI_ADIA,
       KC_LCTL, FI_Z,   FI_X,   FI_C,   FI_V,   FI_B,   KC_LSFT,   KC_LCTL,  LT(_NUMBERS, KC_SPC), KC_LSFT, FI_N,    FI_M,    FI_COMM, FI_DOT, FI_MINS, FI_ODIA,
-      KC_LGUI, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NAVIGATION, KC_ENT),        LT(_SYMBOLS, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_TAB,  KC_DEL, KC_ENT
+      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NAVIGATION, KC_ENT),        LT(_SYMBOLS, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_TAB,  KC_DEL, K_RENC
     ),
 /*
  * Lower Layer: Symbols
@@ -210,7 +225,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, FI_EXLM, FI_AT,   FI_LCBR, FI_RCBR, FI_PIPE,                                     FI_QUOT, FI_DQUO, FI_LABK, FI_RABK, FI_BSLS, _______,
       _______, FI_SECT, FI_DLR,  FI_LPRN, FI_RPRN, FI_HASH,                                     FI_PLUS, FI_MINS, FI_SLSH, FI_ASTR, FI_PERC, _______,
       _______, FI_PIPE, FI_CIRC, FI_LBRC, FI_RBRC, FI_TILD, _______, _______, _______, _______, FI_AMPR, FI_EQL,  FI_COMM, FI_DOT,  FI_ACUT, _______,
-                                 _______, _______, _______, _______, _______,  _______,  _______, _______, _______, _______
+                                 K_LENC , _______, _______, _______, _______,  _______,  _______, _______, _______, K_RENC
     ),
 
 /*
@@ -221,7 +236,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |        |      | Prev | Play | Next | Copy |                              |      | Left | Up   | Right| Home |   PgUp |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |      |  Cut | Paste|      |      |  |      |      |      | Left | Down | Right|  End |   PgDn |
+ * |        |      |      |      |  Cut | Paste|      |      |  |      |      |      |      | Down |      |  End |   PgDn |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -230,8 +245,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NAVIGATION] = LAYOUT(
       _______,    FI_1,    FI_2,    FI_3,    FI_4,    FI_5,                                        FI_6,    FI_7,    FI_8,    FI_9,    FI_0, _______,
       _______, _______, KC_MPRV, KC_MPLY, KC_MNXT, K_COPY ,                                     _______, KC_LEFT, KC_UP  , KC_RGHT, KC_HOME, KC_PGUP,
-      _______, _______, K_UNDO , K_REDO , K_CUT  , K_PSTE , _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_END , KC_PGDN,
-                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+      _______, _______, K_UNDO , K_REDO , K_CUT  , K_PSTE , _______, _______, _______, _______, _______, _______, KC_DOWN, _______, KC_END , KC_PGDN,
+                                 K_LENC, _______, _______, _______, _______, _______, _______, _______, _______, K_RENC
     ),
  
  /*
@@ -252,29 +267,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       RGB_TOG, RGB_SAI, FI_7, FI_8, FI_9, _______,                                     KC_F9, KC_F10, KC_F11, KC_F12, _______, _______,
       _______, RGB_HUI, FI_4, FI_5, FI_6, _______,                                     KC_F5, KC_F6 , KC_F7 , KC_F8 , _______, _______,
       _______, RGB_VAI, FI_1, FI_2, FI_3, _______, RGB_MOD, _______, _______, _______, KC_F1, KC_F2 , KC_F3 , KC_F4 , _______, _______,
-                        TG(_GAMER), FI_0, _______, _______, _______, _______, _______, _______, _______, _______
-    ),
- /*
- * Gamer Layer: Gamer / space doesnt have hold function
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |RAIS/ESC|   Q  |   W  |   E  |   R  |   T  |                              |   Y  |   U  |   I  |   O  |   P  |  | \   |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * | LShift |   A  |   S  |  D   |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |  ' "   |
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|       
- * | Ctrl   |   Z  |   X  |   C  |   V  |   B  |LShift|LShift|  |LShift|LShift|   N  |   M  | ,  < | . >  | /  ? |  - _   |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *  *                     | GUI  | Del  |  BSPC| Space| Enter|  | Enter| Bksp | Tab  | Del  | AltGr|
- *                        |      |      | Alt  | Lower| Raise|  | Lower| Raise|      |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
-
-    [_GAMER] = LAYOUT(
-      KC_ESC , FI_Q,   FI_W,   FI_E,   FI_R,   FI_T,                                               FI_Y,    FI_U,    FI_I,    FI_O,   FI_P,    FI_PLUS,
-      KC_LSFT, FI_A,   FI_S,   FI_D,   FI_F,   FI_G,                                               FI_H,    FI_J,    FI_K,    FI_L,   FI_SCLN, FI_ADIA,
-      KC_LCTL, FI_Z,   FI_X,   FI_C,   FI_V,   FI_B,   KC_LSFT,   KC_LCTL,  TG(_GAMER), KC_RALT,  FI_N,    FI_M,    FI_COMM, FI_DOT, FI_MINS, FI_ODIA,
-               KC_LGUI, KC_TAB, KC_LALT,       KC_SPC, LT(_NAVIGATION, KC_ENT),  LT(_SYMBOLS,  KC_ENT),  KC_BSPC,         KC_TAB,  KC_DEL,  KC_ENT
-    ),
+                        K_LENC,     FI_0, _______, _______, _______, _______, _______, _______, _______, K_RENC
+    )
 // /*
 //  * Layer template
 //  *
@@ -296,6 +290,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
 //     ),
 };
+// qmk compile -kb kyria -km fi
 
 const rgblight_segment_t PROGMEM qwerty_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 20, HSV_RED}       // Light all red
@@ -312,17 +307,12 @@ const rgblight_segment_t PROGMEM navigation_layer[] = RGBLIGHT_LAYER_SEGMENTS(
 const rgblight_segment_t PROGMEM numbers_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 20, HSV_YELLOW}
 );
-// Light LEDs 9 & 10 in cyan when keyboard layer 1 is active
-const rgblight_segment_t PROGMEM gamer_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 20, HSV_BLUE}
-);
 
 const rgblight_segment_t* const PROGMEM k_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
     qwerty_layer,
     symbols_layer,    
     navigation_layer, 
-    numbers_layer,    
-    gamer_layer
+    numbers_layer
 );
 
 void keyboard_post_init_user(void){
@@ -341,7 +331,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(1, layer_state_cmp(state, _SYMBOLS));
     rgblight_set_layer_state(2, layer_state_cmp(state, _NAVIGATION));
     rgblight_set_layer_state(3, layer_state_cmp(state, _NUMBERS));
-    rgblight_set_layer_state(4, layer_state_cmp(state, _GAMER));
     return state;
 }
 
@@ -388,8 +377,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             break;
-           
-    }
+        case K_LENC:
+            if (record->event.pressed)
+            {
+                lenc_pressed();
+            }
+            break;
+        case K_RENC:
+            if (record->event.pressed)
+            {
+                renc_pressed();
+            }
+            break;
+        }
     return true;
 };
 
@@ -542,21 +542,12 @@ static void render_sakura(void){
     
 //     // x:0 y:7 rows
 //     oled_set_cursor(0, 7);
-//     switch (get_highest_layer(layer_state)) {
-//         case _QWERTY:
-//             oled_write_P(PSTR("default"), false);
+//     switch (enc_mode) {
+//         case ARROW:
+//             oled_write_P(PSTR("arrows"), false);
 //             break;
-//         case _SYMBOLS:
-//             oled_write_P(PSTR("symbols"), false);
-//             break;
-//         case _NAVIGATION:
-//             oled_write_P(PSTR("navigation"), false);
-//             break;
-//         case _NUMBERS:
-//             oled_write_P(PSTR("numbers"), false);
-//             break;
-//         case _GAMER:
-//             oled_write_P(PSTR("gamer"), false);
+//         case ETCH:
+//             oled_write_P(PSTR("etch"), false);
 //             break;
 //         default:
 //             oled_write_P(PSTR("Undefined"), false);
@@ -567,19 +558,28 @@ static void render_sakura(void){
 
 void oled_task_user(void) {
     if (is_keyboard_master()) {
+        if (should_reset_etch)
+        {
+            etch_reset();
+            should_reset_etch = 0;
+        }
+        
         // Renders the current keyboard state (layer, lock, caps, scroll, etc)
+        if (enc_mode == ETCH)
+        {
+            etch_animate();
+        }
 
         uint16_t frame_elapsed = 0;
 
         frame_elapsed = timer_elapsed(frame_timer);
 
-        if (frame_elapsed > (FRAME_TIME)) {
+        if (frame_elapsed > (FRAME_TIME) && enc_mode != ETCH) {
             render_sakura();
             snow_animate();
             frame_timer = timer_read32();
         }
-
-        //render_status();
+        
 
     } else {
         uint16_t frame_elapsed = 0;
@@ -599,19 +599,105 @@ void oled_task_user(void) {
 void encoder_update_user(uint8_t index, bool clockwise) {
     if (index == 0) {
         // Volume control
-        if (!clockwise) {
-            tap_code(KC_VOLU);
+        if (clockwise) {
+            lenc_c();
         } else {
-            tap_code(KC_VOLD);
+            lenc_cw();
         }
     }
     else if (index == 1) {
         // Page up/Page down
         if (clockwise) {
-            tap_code(KC_UP);
+            renc_c();
         } else {
-            tap_code(KC_DOWN);
+            renc_cw();
         }
     }
 }
 #endif
+
+void lenc_pressed(void){
+    if (get_highest_layer(layer_state) == _NUMBERS) {
+        enc_mode = ETCH;
+        should_reset_etch = 1;
+        etch_reset();
+        return;
+    }
+    
+    switch (enc_mode)
+    {
+    case ARROW:
+        tap_code16(KC_LGUI);
+        break;
+    case ETCH:
+        etch_reset();
+        break;
+    default:
+        break;
+    }
+}
+
+void renc_pressed(void){
+    if (get_highest_layer(layer_state) == _NUMBERS) {
+        enc_mode = ARROW;
+        return;
+    }
+    
+    switch (enc_mode)
+    {
+    case ARROW:
+        tap_code16(KC_ENT);
+        break;
+    case ETCH:
+        etch_init();
+        break;
+    default:
+        break;
+    }
+}
+
+
+void lenc_c(void){
+    switch (enc_mode)
+    {
+    case ARROW:
+        tap_code(KC_UP);
+        break;
+    case ETCH:
+        etch_move_cursor(E_UP);
+        break;
+    }
+}
+void lenc_cw(void){
+    switch (enc_mode)
+    {
+    case ARROW:
+        tap_code(KC_DOWN);
+        break;
+    case ETCH:
+        etch_move_cursor(E_DOWN);
+        break;
+    }
+}
+void renc_c(void){
+    switch (enc_mode)
+    {
+    case ARROW:
+        tap_code(KC_UP);
+        break;
+    case ETCH:
+        etch_move_cursor(E_LEFT);
+        break;
+    }
+}
+void renc_cw(void){
+    switch (enc_mode)
+    {
+    case ARROW:
+        tap_code(KC_DOWN);
+        break;
+    case ETCH:
+        etch_move_cursor(E_RIGHT);
+        break;
+    }
+}

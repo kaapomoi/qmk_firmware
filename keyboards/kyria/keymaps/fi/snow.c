@@ -38,7 +38,7 @@ int8_t round_f(float x)
 void snow_init(uint32_t seed){
     if (initialized == 0){
         srand(seed);
-        for (int32_t i = 0; i < MAX_FLAKES; i++) {
+        for (int16_t i = 0; i < MAX_FLAKES; i++) {
             flakes[i].pos = fvec2( rand()%MAX_X, 0);
             flakes[i].vel = fvec2((rand()%200 - 100) * 0.01, rand()%100 * 0.01);
             flakes[i].mass = rand()%MAX_MASS + MIN_MASS;
@@ -55,7 +55,7 @@ void snow_animate(void){
 
     fvec2_t windv = {sinf(wind_counter*0.5f) + sinf(wind_counter*0.25f) + sinf(wind_counter*0.1f), sinf(wind_counter*0.2f + 1)};
 
-    for (int32_t i = 0; i < MAX_FLAKES; i++)
+    for (int16_t i = 0; i < MAX_FLAKES; i++)
     {
         float effectiveness = rand()% VARIANCE * 0.1f;
         fvec2_t old_pos = flakes[i].pos;

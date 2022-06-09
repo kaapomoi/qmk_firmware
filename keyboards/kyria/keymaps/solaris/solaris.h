@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SOLARIS_H
+#define SOLARIS_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,7 +37,18 @@ struct Particle
     float radius;
 };
 
+struct Ring{
+    ivec2_t c_pos;
+    int radius;
+    int8_t n_th_pixel;
+};
+
 void pixel_render_func(uint8_t *data, void *user_args);
+
+void draw_ring(struct Ring* ring);
+void clear_ring(struct Ring* ring);
+void draw_ring_pixel(int8_t x, int8_t y, int every_nth);
+void clear_ring_pixel(int8_t x, int8_t y);
 
 ivec2_t ivec2(int8_t x, int8_t y);
 
@@ -49,3 +61,5 @@ int8_t round_f(float x);
 void solaris_animate(void);
 
 void solaris_init(uint32_t seed);
+
+#endif

@@ -138,7 +138,7 @@
 #define FI_MICR ALGR(FI_M)    // µ
 
 
-#define FRAME_TIME 40
+#define FRAME_TIME 100
 
 void lenc_pressed(void);
 void renc_pressed(void);
@@ -363,15 +363,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
          
 void oled_task_user(void) {
     if (is_keyboard_master()) {
-        uint16_t frame_elapsed = 0;
-
-        frame_elapsed = timer_elapsed(frame_timer);
+        uint16_t frame_elapsed = timer_elapsed(frame_timer);
 
         if (frame_elapsed > (FRAME_TIME)) {
             solaris_animate();
             frame_timer = timer_read32();
         }
-        
 
     } else {
         uint16_t frame_elapsed = 0;

@@ -204,7 +204,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_ESC , FI_Q,   FI_W,   FI_E,   FI_R,   FI_T,                                                       FI_Y,    FI_U,    FI_I,    FI_O,   FI_P,    FI_PLUS,
       KC_LSFT, FI_A,   FI_S,   FI_D,   FI_F,   FI_G,                                                       FI_H,    FI_J,    FI_K,    FI_L,   K_COLN,  FI_ADIA,
       KC_LCTL, FI_Z,   FI_X,   FI_C,   FI_V,   FI_B,   KC_LSFT,   KC_LCTL,  MO(_MEDIA), KC_LSFT,  FI_N,    FI_M,    FI_COMM, FI_DOT, FI_MINS, FI_ODIA,
-      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), MO(_NUMBERS_AND_NAV),        MO(_NUMBERS_AND_NAV), LT(_NUMBERS_AND_NAV, KC_BSPC), KC_TAB,  KC_DEL, K_RENC
+      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NUMBERS_AND_NAV, KC_ENT),        MO(_NUMBERS_AND_NAV), LT(_NUMBERS_AND_NAV, KC_BSPC), KC_TAB,  KC_DEL, K_RENC
     ),
 /*
  * Lower Layer: Symbols

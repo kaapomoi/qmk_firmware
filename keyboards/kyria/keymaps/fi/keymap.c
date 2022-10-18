@@ -169,9 +169,8 @@ enum enc_modes{
 enum layers {
     _QWERTY = 0,
     _SYMBOLS,
-    _NAVIGATION,
-    _NUMBERS,
-    _GAMER
+    _NUMBERS_AND_NAV,
+    _MEDIA
 };
 
 enum custom_keycodes {
@@ -204,8 +203,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(
       KC_ESC , FI_Q,   FI_W,   FI_E,   FI_R,   FI_T,                                                       FI_Y,    FI_U,    FI_I,    FI_O,   FI_P,    FI_PLUS,
       KC_LSFT, FI_A,   FI_S,   FI_D,   FI_F,   FI_G,                                                       FI_H,    FI_J,    FI_K,    FI_L,   K_COLN,  FI_ADIA,
-      KC_LCTL, FI_Z,   FI_X,   FI_C,   FI_V,   FI_B,   KC_LSFT,   KC_LCTL,  LT(_NUMBERS, KC_SPC), KC_LSFT, FI_N,    FI_M,    FI_COMM, FI_DOT, FI_MINS, FI_ODIA,
-      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NAVIGATION, KC_ENT),        LT(_SYMBOLS, KC_ENT), LT(_NAVIGATION, KC_BSPC), KC_TAB,  KC_DEL, K_RENC
+      KC_LCTL, FI_Z,   FI_X,   FI_C,   FI_V,   FI_B,   KC_LSFT,   KC_LCTL,  MO(_MEDIA), KC_LSFT,  FI_N,    FI_M,    FI_COMM, FI_DOT, FI_MINS, FI_ODIA,
+      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), MO(_NUMBERS_AND_NAV),        MO(_NUMBERS_AND_NAV), LT(_NUMBERS_AND_NAV, KC_BSPC), KC_TAB,  KC_DEL, K_RENC
     ),
 /*
  * Lower Layer: Symbols
@@ -242,13 +241,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-    [_NAVIGATION] = LAYOUT(
-      _______,    FI_1,    FI_2,    FI_3,    FI_4,    FI_5,                                        FI_6,    FI_7,    FI_8,    FI_9,    FI_0, _______,
-      _______, _______, KC_MPRV, KC_MPLY, KC_MNXT, K_COPY ,                                     _______, KC_LEFT, KC_UP  , KC_RGHT, KC_HOME, KC_PGUP,
-      _______, _______, K_UNDO , K_REDO , K_CUT  , K_PSTE , _______, _______, _______, _______, _______, _______, KC_DOWN, _______, KC_END , KC_PGDN,
-                                 K_LENC, _______, _______, _______, _______, _______, _______, _______, _______, K_RENC
+    [_NUMBERS_AND_NAV] = LAYOUT(
+      _______,    FI_5,    FI_6,    FI_7,    FI_8,    FI_9,                                        FI_0,    FI_1,    FI_2,    FI_3,    FI_4, _______,
+      _______,    FI_0,    FI_1,    FI_2,    FI_3,    FI_4,                                     KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, _______, _______,
+      _______, _______, K_UNDO , K_REDO , K_CUT  , K_PSTE , _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+                                 K_LENC , _______, _______, _______, _______, _______, _______, _______, _______, K_RENC
     ),
  
+
  /*
  * Layer template
  *
@@ -263,12 +263,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
-    [_NUMBERS] = LAYOUT(
-      RGB_TOG, RGB_SAI, FI_7, FI_8, FI_9, _______,                                     KC_F9, KC_F10, KC_F11, KC_F12, _______, _______,
-      _______, RGB_HUI, FI_4, FI_5, FI_6, _______,                                     KC_F5, KC_F6 , KC_F7 , KC_F8 , _______, _______,
-      _______, RGB_VAI, FI_1, FI_2, FI_3, _______, RGB_MOD, _______, _______, _______, KC_F1, KC_F2 , KC_F3 , KC_F4 , _______, _______,
-                        K_LENC,     FI_0, _______, _______, _______, _______, _______, _______, _______, K_RENC
+    [_MEDIA] = LAYOUT(
+      RGB_TOG, RGB_SAI, KC_MPRV, KC_MPLY, KC_MNXT, _______,                                     KC_F9, KC_F10, KC_F11, KC_F12, _______, _______,
+      RGB_MOD, RGB_HUI, K_CUT  , K_COPY , K_PSTE , _______,                                     KC_F5, KC_F6 , KC_F7 , KC_F8 , _______, _______,
+      _______, RGB_VAI, _______, _______, _______, _______, _______, _______, _______, _______, KC_F1, KC_F2 , KC_F3 , KC_F4 , _______, _______,
+                        K_LENC,  _______, _______, _______, _______, _______, _______, _______, _______, K_RENC
     )
+
 // /*
 //  * Layer template
 //  *
@@ -303,16 +304,11 @@ const rgblight_segment_t PROGMEM symbols_layer[] = RGBLIGHT_LAYER_SEGMENTS(
 const rgblight_segment_t PROGMEM navigation_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 20, HSV_GREEN}
 );
-// Light LEDs 9 & 10 in cyan when keyboard layer 1 is active
-const rgblight_segment_t PROGMEM numbers_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {0, 20, HSV_YELLOW}
-);
 
 const rgblight_segment_t* const PROGMEM k_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
     qwerty_layer,
     symbols_layer,    
-    navigation_layer, 
-    numbers_layer
+    navigation_layer 
 );
 
 void keyboard_post_init_user(void){
@@ -329,8 +325,7 @@ void keyboard_post_init_user(void){
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(1, layer_state_cmp(state, _SYMBOLS));
-    rgblight_set_layer_state(2, layer_state_cmp(state, _NAVIGATION));
-    rgblight_set_layer_state(3, layer_state_cmp(state, _NUMBERS));
+    rgblight_set_layer_state(2, layer_state_cmp(state, _NUMBERS_AND_NAV));
     return state;
 }
 
@@ -617,7 +612,7 @@ void encoder_update_user(uint8_t index, bool clockwise) {
 #endif
 
 void lenc_pressed(void){
-    if (get_highest_layer(layer_state) == _NUMBERS) {
+    if (get_highest_layer(layer_state) == _NUMBERS_AND_NAV) {
         enc_mode = ETCH;
         should_reset_etch = 1;
         etch_reset();
@@ -638,7 +633,7 @@ void lenc_pressed(void){
 }
 
 void renc_pressed(void){
-    if (get_highest_layer(layer_state) == _NUMBERS) {
+    if (get_highest_layer(layer_state) == _NUMBERS_AND_NAV) {
         enc_mode = ARROW;
         return;
     }

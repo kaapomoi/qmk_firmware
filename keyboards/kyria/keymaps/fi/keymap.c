@@ -192,50 +192,50 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-------------------------------------------.                              ,-------------------------------------------.
  * |  ESC   |   Q  |   W  |   E  |   R  |   T  |                              |   Y  |   U  |   I  |   O  |   P  |  + ?   |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * | LShift |   A  |   S  |  D   |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;    |  ä     |
+ * | LShift |   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  | :  ; |  Ä     |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | Ctrl   |   Z  |   X  |   C  |   V  |   B  |LShift|LCtrl |  |num/sb|AltGr |   N  |   M  | , ;  | . :  | -  _ |  ö     |
+ * | Ctrl   |   Z  |   X  |   C  |   V  |   B  |LShift|LCtrl |  | FKeys|AltGr |   N  |   M  | ,  ; | .  : | -  _ |  Ö     |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *  *                     | GUI  | TAB  |  BSPC| Space| Enter|  | Enter| Bksp | Tab  | Del  | Enter|
- *                        |      |      | Alt  | Lower| Raise|  | Lower| Raise|      |      |      |
+ *                        |      |      | Alt  |Symbol|NumNav|  |NumNav|NumNav|      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_QWERTY] = LAYOUT(
-      KC_ESC , FI_Q,   FI_W,   FI_E,   FI_R,   FI_T,                                                       FI_Y,    FI_U,    FI_I,    FI_O,   FI_P,    FI_PLUS,
-      KC_LSFT, FI_A,   FI_S,   FI_D,   FI_F,   FI_G,                                                       FI_H,    FI_J,    FI_K,    FI_L,   K_COLN,  FI_ADIA,
-      KC_LCTL, FI_Z,   FI_X,   FI_C,   FI_V,   FI_B,   KC_LSFT,   KC_LCTL,  MO(_MEDIA), KC_LSFT,  FI_N,    FI_M,    FI_COMM, FI_DOT, FI_MINS, FI_ODIA,
-      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NUMBERS_AND_NAV, KC_ENT),        MO(_NUMBERS_AND_NAV), LT(_NUMBERS_AND_NAV, KC_BSPC), KC_TAB,  KC_DEL, K_RENC
+      KC_ESC , FI_Q,   FI_W,   FI_E,   FI_R,   FI_T,                                                                        FI_Y,    FI_U,    FI_I,    FI_O,    FI_P, FI_PLUS,
+      KC_LSFT, FI_A,   FI_S,   FI_D,   FI_F,   FI_G,                                                                        FI_H,    FI_J,    FI_K,    FI_L,  K_COLN, FI_ADIA,
+      KC_LCTL, FI_Z,   FI_X,   FI_C,   FI_V,   FI_B,   KC_LSFT,   KC_LCTL,                          MO(_MEDIA), KC_LSFT,    FI_N,    FI_M, FI_COMM,  FI_DOT, FI_MINS, FI_ODIA,
+      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NUMBERS_AND_NAV, KC_ENT),    MO(_NUMBERS_AND_NAV), LT(_NUMBERS_AND_NAV, KC_BSPC), KC_TAB,  KC_DEL, K_RENC
     ),
 /*
  * Lower Layer: Symbols
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |  !   |  @   |  {   |  }   |  |   |                              |   '  |  "   |   <  |   >  |    \ |        |
+ * |        |  !   |  @   |  {   |  }   |  |   |                              |   '  |  "   |  <   |  >   |  \   |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |  §   |  $   |  (   |  )   |  #   |                              |   +  |  -   |  /   |  *   |  %   |        |
+ * |        |  &   |  $   |  (   |  )   |  #   |                              |   +  |  -   |  /   |  *   |  %   |  PgUp  |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |  |   |  ^   |  [   |  ]   |  ~   |      |      |  |      |      |   &  |  =   |  ,   |  .   |  ´   |        |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+---------------
+ * |        |  |   |  ^   |  [   |  ]   |  ~   |      |      |  |      |      |   &  |  =   |  ,   |  .   |  ´   |  PgDn  |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SYMBOLS] = LAYOUT(
       _______, FI_EXLM, FI_AT,   FI_LCBR, FI_RCBR, FI_PIPE,                                     FI_QUOT, FI_DQUO, FI_LABK, FI_RABK, FI_BSLS, _______,
-      _______, FI_SECT, FI_DLR,  FI_LPRN, FI_RPRN, FI_HASH,                                     FI_PLUS, FI_MINS, FI_SLSH, FI_ASTR, FI_PERC, _______,
-      _______, FI_PIPE, FI_CIRC, FI_LBRC, FI_RBRC, FI_TILD, _______, _______, _______, _______, FI_AMPR, FI_EQL,  FI_COMM, FI_DOT,  FI_ACUT, _______,
+      _______, FI_SECT, FI_DLR,  FI_LPRN, FI_RPRN, FI_HASH,                                     FI_PLUS, FI_MINS, FI_SLSH, FI_ASTR, FI_PERC, KC_PGUP,
+      _______, FI_PIPE, FI_CIRC, FI_LBRC, FI_RBRC, FI_TILD, _______, _______, _______, _______, FI_AMPR, FI_EQL,  FI_COMM, FI_DOT,  FI_ACUT, KC_PGDN,
                                  K_LENC , _______, _______, _______, _______,  _______,  _______, _______, _______, K_RENC
     ),
 
 /*
- * Raise Layer: Number keys, media, navigation
+ * Raise Layer: Number keys, navigation
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |   1  |  2   |  3   |  4   |  5   |                              |  6   |  7   |  8   |  9   |  0   |        |
+ * |        |   5  |  6   |  7   |  8   |  9   |                              |  6   |  7   |  8   |  9   |  0   |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |      | Prev | Play | Next | Copy |                              |      | Left | Up   | Right| Home |   PgUp |
+ * |        |   0  |  1   |  2   |  3   |  4   |                              | Left | Down |  Up  | Right|      |  PgUp  |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |      |  Cut | Paste|      |      |  |      |      |      |      | Down |      |  End |   PgDn |
+ * |        |      |Insert| Home |  End |      |      |      |  |      |      |      |      |      |      |      |  PgDn  |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -243,8 +243,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_NUMBERS_AND_NAV] = LAYOUT(
       _______,    FI_5,    FI_6,    FI_7,    FI_8,    FI_9,                                        FI_0,    FI_1,    FI_2,    FI_3,    FI_4, _______,
-      _______,    FI_0,    FI_1,    FI_2,    FI_3,    FI_4,                                     KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, _______, _______,
-      _______, _______, K_UNDO , K_REDO , K_CUT  , K_PSTE , _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+      _______,    FI_0,    FI_1,    FI_2,    FI_3,    FI_4,                                     KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, _______, KC_PGUP,
+      _______, _______,  KC_INS, KC_HOME,  KC_END, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PGDN,
                                  K_LENC , _______, _______, _______, _______, _______, _______, _______, _______, K_RENC
     ),
  
@@ -253,13 +253,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Layer template
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |RBGEnabl| SAT  |   7  |  8   |   9  |      |                              | F9   |  F10 |  F11 |  F12 |      |        |
+ * |RBGEnabl| SAT  |   7  |  8   |   9  |      |                              |   F9 |  F10 |  F11 |  F12 |      |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |  HUE |   4  |  5   |   6  |      |                              |  F5  |  F6  |  F7  |  F8  |      |        |
+ * |RGBMode | HUE  |   4  |  5   |   6  |      |                              |   F5 |   F6 |   F7 |   F8 |      |        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
  * |        | VAL  |   1  |  2   |   3  |      |RGBMOD| RGBE |  |      |      |   F1 |   F2 |   F3 |   F4 |      |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |      |  0   |      |      |      |  |      |      |   0  |      |      |
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */

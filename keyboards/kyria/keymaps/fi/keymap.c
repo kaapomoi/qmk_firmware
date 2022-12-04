@@ -141,7 +141,7 @@
 
 #define FRAME_TIME 40
 
-void lenc_pressed(void);
+void lenc_action(bool pressed);
 void renc_pressed(void);
 void lenc_c(void);
 void lenc_cw(void);
@@ -375,7 +375,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case K_LENC:
             if (record->event.pressed)
             {
-                lenc_pressed();
+                lenc_action(true);
+            } else {
+                lenc_action(false);
             }
             break;
         case K_RENC:
@@ -611,7 +613,7 @@ void encoder_update_user(uint8_t index, bool clockwise) {
 }
 #endif
 
-void lenc_pressed(void){
+void lenc_action(bool pressed){
     if (get_highest_layer(layer_state) == _NUMBERS_AND_NAV) {
         enc_mode = ETCH;
         should_reset_etch = 1;
@@ -622,7 +624,11 @@ void lenc_pressed(void){
     switch (enc_mode)
     {
     case ARROW:
-        tap_code16(KC_LGUI);
+        if (pressed) {
+            register_code(KC_LGUI);
+        } else {
+            unregister_code(KC_LGUI);
+        }
         break;
     case ETCH:
         etch_reset();

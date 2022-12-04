@@ -5,7 +5,7 @@
 #include <time.h>
 #include <math.h>
 
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 #include "oled_driver.h"
 #include <avr/pgmspace.h>
 #endif
@@ -50,7 +50,7 @@ ivec2_t ivec2(int8_t x, int8_t y);
 
 fvec2_t fvec2(float x, float y);
 
-int8_t round_f(float x);
+uint8_t round_f(float x);
 
 void snow_animate(void);
 

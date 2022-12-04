@@ -30,9 +30,9 @@ void pixel_render_func(uint8_t *data, void *user_args) {
     *data |= flake;
 }
 
-int8_t round_f(float x)
+uint8_t round_f(float x)
 {
-    return (int8_t)round(x);
+    return (uint8_t)round(x);
 }
 
 void snow_init(uint32_t seed){

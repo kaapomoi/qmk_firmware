@@ -10,7 +10,7 @@
 #include <avr/pgmspace.h>
 #endif
 
-#define DELTATIME 0.2f
+#define DELTATIME 0.4f
 
 #define MIN_X 0
 #define MIN_Y 0

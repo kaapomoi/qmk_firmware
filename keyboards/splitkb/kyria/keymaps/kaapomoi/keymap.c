@@ -146,12 +146,13 @@ typedef union {
 
 user_config_t user_config;
 
+bool todo_mode = false;
+
 enum layers {
     _QWERTY = 0,
     _SYMBOLS,
     _NUMBERS_AND_NAV,
-    _MEDIA,
-    _TODO
+    _MEDIA
 };
 
 enum custom_keycodes {
@@ -250,29 +251,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                         K_LENC,  _______, _______, _______, _______, _______, _______, _______, _______, K_RENC
     ),
 
-
-/*
- * Base Layer: QWERTY
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |  ESC   |   Q  |   W  |   E  |   R  |   T  |                              |   Y  |   U  |   I  |   O  |   P  |  + ?   |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * | LShift |   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  | :  ; |  Ä     |
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | Ctrl   |   Z  |   X  |   C  |   V  |   B  |Super | Alt  |  | FKeys|AltGr |   N  |   M  | ,  ; | .  : | -  _ |  Ö     |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *  *                     | GUI  | TAB  |  BSPC| Space| Enter|  | Enter| Bksp | Tab  | Del  | Enter|
- *                        |      |      | Alt  |Symbol|NumNav|  |NumNav|NumNav|      |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
-    [_TODO] = LAYOUT(
-      KC_ESC , to_q,   to_w,   to_e,   to_r,   to_t,                                                                        to_y,    to_u,    to_i,    to_o,    to_p, FI_PLUS,
-      KC_LSFT, to_a,   to_s,   to_d,   to_f,   to_g,                                                                        to_h,    to_j,    to_k,    to_l,  K_COLN, FI_ADIA,
-      KC_LCTL, to_z,   to_x,   to_c,   to_v,   to_b,   KC_LGUI,   KC_LALT,                          MO(_MEDIA), KC_LSFT,    to_n,    to_m, FI_COMM,  FI_DOT, FI_MINS, FI_ODIA,
-      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NUMBERS_AND_NAV, KC_ENT),    MO(_NUMBERS_AND_NAV), LT(_NUMBERS_AND_NAV, KC_BSPC), KC_LGUI,  KC_DEL, K_RENC
-    ),
-
-
 // /*
 //  * Layer template
 //  *
@@ -298,7 +276,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void keyboard_post_init_user(void){
     user_config.raw = eeconfig_read_user();
 
-    char buf[128];
+    char buf[256];
     /// Get buffer from eeprom
     todo_init(buf, 1);
 
@@ -311,51 +289,55 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
  
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch(keycode) {
-        case K_COPY:
-            if (record->event.pressed) {
-                tap_code16(C(FI_C));
-            }
-            break;
-        case K_PSTE:
-            if (record->event.pressed) {
-                tap_code16(C(FI_V));
-            }
-            break;
-        case K_CUT:
-            if (record->event.pressed) {
-                tap_code16(C(FI_X));
-            }
-            break;
-        case K_UNDO:
-            if (record->event.pressed) {
-                tap_code16(C(FI_Z));
-            }
-            break;
-        case K_REDO:
-            if (record->event.pressed) {
-                tap_code16(C(FI_Y));
-            }
-            break;
-        case K_COLN:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT)
-                {
-                    tap_code16(FI_SCLN);
+    if (todo_mode) {
+        todo_handle_input(keycode, record);
+        return false;
+    } else {
+        switch(keycode) {
+            case K_COPY:
+                if (record->event.pressed) {
+                    tap_code16(C(FI_C));
                 }
-                else
-                {
-                    tap_code16(FI_COLN);
+                break;
+            case K_PSTE:
+                if (record->event.pressed) {
+                    tap_code16(C(FI_V));
                 }
-            }
-            break;
+                break;
+            case K_CUT:
+                if (record->event.pressed) {
+                    tap_code16(C(FI_X));
+                }
+                break;
+            case K_UNDO:
+                if (record->event.pressed) {
+                    tap_code16(C(FI_Z));
+                }
+                break;
+            case K_REDO:
+                if (record->event.pressed) {
+                    tap_code16(C(FI_Y));
+                }
+                break;
+            case K_COLN:
+                if (record->event.pressed) {
+                    if (get_mods() & MOD_MASK_SHIFT)
+                    {
+                        tap_code16(FI_SCLN);
+                    }
+                    else
+                    {
+                        tap_code16(FI_COLN);
+                    }
+                }
+                break;
+        }
+        return true;
     }
-    return true;
 };
 
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
-
         // TODO: Implement TODO
         todo_render();
     } else {

@@ -21,6 +21,8 @@ bool todo_handle_input(uint16_t keycode, keyrecord_t *record);
 
 void todo_render(void);
 
+void render_cursor(void);
+
 enum todo_char {
     TC_A = 97,
     TC_B,

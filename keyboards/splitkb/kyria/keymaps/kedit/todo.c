@@ -26,7 +26,22 @@ bool todo_handle_input(uint16_t keycode, keyrecord_t *record){
     return needs_further_processing;
 }
 
-void todo_render(void){
-    oled_write(buffer, false);
+void render_cursor(void) {
+    int font_width = 6;
+    int font_height = 8;
+    int max_chars_w = 21;
+    oled_write_pixel(font_width*(g_cursor%max_chars_w), font_height*(g_cursor/max_chars_w), true);
+    oled_write_pixel(font_width*(g_cursor%max_chars_w), font_height*(g_cursor/max_chars_w) + 1, true);
+    oled_write_pixel(font_width*(g_cursor%max_chars_w), font_height*(g_cursor/max_chars_w) + 2, true);
+    oled_write_pixel(font_width*(g_cursor%max_chars_w), font_height*(g_cursor/max_chars_w) + 3, true);
+    oled_write_pixel(font_width*(g_cursor%max_chars_w), font_height*(g_cursor/max_chars_w) + 4, true);
+    oled_write_pixel(font_width*(g_cursor%max_chars_w), font_height*(g_cursor/max_chars_w) + 5, true);
+    oled_write_pixel(font_width*(g_cursor%max_chars_w), font_height*(g_cursor/max_chars_w) + 6, true);
+    oled_write_pixel(font_width*(g_cursor%max_chars_w), font_height*(g_cursor/max_chars_w) + 7, true);
+}
+
+void todo_render(void) {
+    render_cursor();
+    oled_write(g_buffer, false);
 }
 

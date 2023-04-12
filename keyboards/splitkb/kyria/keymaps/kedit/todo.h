@@ -15,6 +15,8 @@
 #define MAX_X 127
 #define MAX_Y 63
 
+int clamp_cursor(int cursor);
+
 void todo_init(char* data, int buffer_size);
 
 bool todo_handle_input(uint16_t keycode, keyrecord_t *record);
@@ -58,5 +60,6 @@ enum todo_char {
     TC_DOT,
     TC_COLN,
     TC_SLSH,
-    TC_BKSP
+    TC_BKSP,
+    TC_SPAC
 }; 

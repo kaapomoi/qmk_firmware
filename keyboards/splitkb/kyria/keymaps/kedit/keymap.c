@@ -267,7 +267,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MEDIA] = LAYOUT(
       RGB_TOG, RGB_SAI, KC_MPRV, KC_MPLY, KC_MNXT, _______,                                     KC_F9, KC_F10, KC_F11, KC_F12, _______, _______,
       RGB_MOD, RGB_HUI, K_CUT  , K_COPY , K_PSTE , _______,                                     KC_F5, KC_F6 , KC_F7 , KC_F8 , _______, _______,
-      _______, RGB_VAI, _______, _______, _______, _______, _______, TO(_TODO), _______, _______, KC_F1, KC_F2 , KC_F3 , KC_F4 , _______, _______,
+      _______, RGB_VAI, _______, _______, _______, _______, _______, TG(_TODO), _______, _______, KC_F1, KC_F2 , KC_F3 , KC_F4 , _______, _______,
                         K_LENC,  _______, _______, _______, _______, _______, _______, _______, _______, K_RENC
     ),
 
@@ -288,8 +288,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_TODO] = LAYOUT(
       KC_ESC , TC_Q,   TC_W,   TC_E,   TC_R,   TC_T,                                                                        TC_Y,    TC_U,    TC_I,    TC_O,    TC_P, TC_PLUS,
       KC_LSFT, TC_A,   TC_S,   TC_D,   TC_F,   TC_G,                                                                        TC_H,    TC_J,    TC_K,    TC_L, TC_COLN, FI_ADIA,
-      KC_LCTL, TC_Z,   TC_X,   TC_C,   TC_V,   TC_B,   KC_LSFT,   TG(_TODO),                          MO(_MEDIA), KC_LSFT,    TC_N,    TC_M, TC_COMM,  TC_DOT, TC_MINS, FI_ODIA,
-      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NUMBERS_AND_NAV, KC_ENT),    MO(_NUMBERS_AND_NAV), TC_BKSP, KC_TAB,  KC_DEL, K_RENC
+      KC_LCTL, TC_Z,   TC_X,   TC_C,   TC_V,   TC_B,   KC_LSFT,   _______,                          MO(_MEDIA), KC_LSFT,    TC_N,    TC_M, TC_COMM,  TC_DOT, TC_MINS, FI_ODIA,
+      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), TC_SPAC, LT(_NUMBERS_AND_NAV, KC_ENT), MO(_NUMBERS_AND_NAV), TC_BKSP, KC_TAB,  KC_DEL, K_RENC
     )
 
 // /*

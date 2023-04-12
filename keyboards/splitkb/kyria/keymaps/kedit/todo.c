@@ -1,28 +1,59 @@
 #include "todo.h"
 #include <string.h>
 
-int cursor = 0;
-char buffer[256] = {'b','i','n','g'};
+#define MAX_BUFFER_SIZE 256
 
+int g_cursor = 0;
+char g_buffer[MAX_BUFFER_SIZE] = {'b','i','n','g'};
 
-void todo_init(char* data, int buffer_size){
-    memcpy(data, buffer, buffer_size);
+int clamp_cursor(int c) {
+    int max_cursor = MAX_BUFFER_SIZE;
+
+    if (c <= 0) {
+        c = 0;
+    }
+    if (c >= max_cursor) {
+        c = max_cursor;
+    }
+
+    return c;
 }
 
-bool todo_handle_input(uint16_t keycode, keyrecord_t *record){
+void todo_init(char* data, int buffer_size) {
+    memcpy(data, g_buffer, buffer_size);
+}
+
+bool todo_handle_input(uint16_t keycode, keyrecord_t *record) {
     bool needs_further_processing = false;
+
     if (keycode >= TC_A && keycode <= TC_Z){
         if (record->event.pressed) {
-            buffer[cursor++] = keycode;
+            if (get_mods() & MOD_MASK_SHIFT) {
+                g_buffer[g_cursor] = keycode - 32;
+            } else {
+                g_buffer[g_cursor] = keycode;
+            }
+            g_cursor++;
+            g_cursor = clamp_cursor(g_cursor);
         }
     } else if (keycode == TC_BKSP){
         if (record->event.pressed) {
-            buffer[cursor--] = 0;
+            g_cursor--;
+            g_cursor = clamp_cursor(g_cursor);
+            g_buffer[g_cursor] = 0;
+            oled_clear();
+        }
+    } else if (keycode == TC_SPAC) {
+        if (record->event.pressed) {
+            g_buffer[g_cursor] = ' ';
+            g_cursor++;
+            g_cursor = clamp_cursor(g_cursor);
         }
     }
     else { 
         needs_further_processing = true;
     } 
+
     return needs_further_processing;
 }
 

@@ -172,7 +172,9 @@ enum layers {
     _SYMBOLS,
     _NUMBERS_AND_NAV,
     _MEDIA,
-    _TODO
+    _TODO,
+    _TC_SYMBOLS,
+    _TC_NUMBERS
 };
 
 enum custom_keycodes {
@@ -206,7 +208,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_ESC , FI_Q,   FI_W,   FI_E,   FI_R,   FI_T,                                                                        FI_Y,    FI_U,    FI_I,    FI_O,    FI_P, FI_PLUS,
       KC_LSFT, FI_A,   FI_S,   FI_D,   FI_F,   FI_G,                                                                        FI_H,    FI_J,    FI_K,    FI_L,  K_COLN, FI_ADIA,
       KC_LCTL, FI_Z,   FI_X,   FI_C,   FI_V,   FI_B,   KC_LSFT,   KC_LCTL,                          MO(_MEDIA), KC_LSFT,    FI_N,    FI_M, FI_COMM,  FI_DOT, FI_MINS, FI_ODIA,
-      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NUMBERS_AND_NAV, KC_ENT),    MO(_NUMBERS_AND_NAV), LT(_NUMBERS_AND_NAV, KC_BSPC), KC_TAB,  KC_DEL, K_RENC
+      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), LT(_SYMBOLS, KC_SPC), LT(_NUMBERS_AND_NAV, KC_ENT),    MO(_NUMBERS_AND_NAV), LT(_NUMBERS_AND_NAV, KC_BSPC), KC_LGUI,  KC_DEL, K_RENC
     ),
 /*
  * Lower Layer: Symbols
@@ -288,10 +290,51 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_TODO] = LAYOUT(
       KC_ESC , TC_Q,   TC_W,   TC_E,   TC_R,   TC_T,                                                                        TC_Y,    TC_U,    TC_I,    TC_O,    TC_P, TC_PLUS,
       KC_LSFT, TC_A,   TC_S,   TC_D,   TC_F,   TC_G,                                                                        TC_H,    TC_J,    TC_K,    TC_L, TC_COLN, FI_ADIA,
-      KC_LCTL, TC_Z,   TC_X,   TC_C,   TC_V,   TC_B,   KC_LSFT,   _______,                          MO(_MEDIA), KC_LSFT,    TC_N,    TC_M, TC_COMM,  TC_DOT, TC_MINS, FI_ODIA,
-      K_LENC, KC_TAB, MT(MOD_LALT, KC_BSPC), TC_SPAC, LT(_NUMBERS_AND_NAV, KC_ENT), MO(_NUMBERS_AND_NAV), TC_BKSP, KC_TAB,  KC_DEL, K_RENC
-    )
+      KC_LCTL, TC_Z,   TC_X,   TC_C,   TC_V,   TC_B,   MO(_TC_SYMBOLS),   _______,                  MO(_MEDIA), KC_LSFT,    TC_N,    TC_M, TC_COMM,  TC_PERI, TC_MINU, FI_ODIA,
+                               K_LENC, KC_TAB,MOD_LALT, TC_SPCE, TC_ENT,                   MO(_TC_NUMBERS), TC_BKSP, KC_TAB,  KC_DEL, K_RENC
+    ),
 
+/*
+ * Lower Layer: Symbols
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |        |  !   |  @   |  {   |  }   |  |   |                              |   '  |  "   |  <   |  >   |  \   |        |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |        |  &   |  $   |  (   |  )   |  #   |                              |   +  |  -   |  /   |  *   |  %   |  PgUp  |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |        |  |   |  ^   |  [   |  ]   |  ~   |      |      |  |      |      |   &  |  =   |  ,   |  .   |  ´   |  PgDn  |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [_TC_SYMBOLS] = LAYOUT(
+      _______, TC_EXLM, TC_AT,   TC_OBRA, TC_CBRA, TC_VBAR,                                     TC_QUOT, TC_QUOT, TC_LT  , TC_GT  , TC_BKSL, TC_QUES,
+      _______, FI_SECT, TC_DOLR, TC_OPAR, TC_CPAR, TC_HASH,                                     TC_PLUS, TC_MINU, TC_SLSH, TC_ASTE, TC_PERC, _______,
+      _______, TC_VBAR, TC_CARE, TC_OBRE, TC_CRBE, TC_TILD, _______, _______, _______, _______, TC_AMPR, TC_EQ  , TC_COMM, TC_PERI, TC_GRAV, _______,
+                                 K_LENC , _______, _______, _______, _______, _______, _______, _______, _______, K_RENC
+    ),
+
+/*
+ * Raise Layer: Number keys, navigation
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |        |Insert|  7   |  8   |  9   |      |                              |      |      |      |      |      |        |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |        |   0  |  4   |  5   |  6   |      |                              | Left | Down |  Up  | Right|      |  PgUp  |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |        | END  |  1   |  2   |  3   | End  |      |      |  |      |      |      |      |      |      |      |  PgDn  |
+ * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
+ *                        | LENC |  0   |      |      |      |  |      |      |      |      | RENC |
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [_TC_NUMBERS] = LAYOUT(
+      _______, _______,   TC_7,   TC_8,   TC_9, _______,                                     _______, _______, _______, _______, _______, _______,
+      _______,    TC_0,   TC_4,   TC_5,   TC_6, _______,                                     TC_LEFT, TC_DOWN,   TC_UP, TC_RGHT, _______, _______,
+      _______, _______,   TC_1,   TC_2,   TC_3, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+                         K_LENC,  TC_0, _______, _______, _______, _______, _______, _______, _______, K_RENC
+    ),
 // /*
 //  * Layer template
 //  *
@@ -320,6 +363,8 @@ void keyboard_post_init_user(void){
     snow_init(user_config.rng_seed);
     user_config.rng_seed = rand();
 
+    todo_init();
+
     eeconfig_update_user(user_config.raw);
     frame_timer = timer_read();
 }
@@ -329,7 +374,9 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
  
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (get_highest_layer(layer_state) == _TODO) {
+    if (get_highest_layer(layer_state) == _TODO ||
+        get_highest_layer(layer_state) == _TC_SYMBOLS ||
+        get_highest_layer(layer_state) == _TC_NUMBERS) {
         return todo_handle_input(keycode, record);
     }
 
@@ -386,6 +433,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
         }
+    
     return true;
 };
 
@@ -474,7 +522,9 @@ bool oled_task_user(void) {
             etch_animate();
         }
 
-        if (get_highest_layer(layer_state) == _TODO) {
+        if (get_highest_layer(layer_state) == _TODO ||
+            get_highest_layer(layer_state) == _TC_SYMBOLS ||
+            get_highest_layer(layer_state) == _TC_NUMBERS) {
             todo_render();
             return false;
         }
@@ -529,11 +579,6 @@ void lenc_action(bool pressed){
         enc_mode = ETCH;
         should_reset_etch = 1;
         etch_reset();
-        return;
-    }
-
-    if (get_highest_layer(layer_state) == _MEDIA) {
-        layer_on(_TODO); 
         return;
     }
 

@@ -15,12 +15,11 @@
  */
 #include QMK_KEYBOARD_H
 
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-      KC_3, KC_F, 
-      KC_2, KC_D,
-      KC_1, KC_E
+      MI_A, MI_E, 
+      MI_G, MI_D,
+      MI_F, MI_C
     ),
 };
 

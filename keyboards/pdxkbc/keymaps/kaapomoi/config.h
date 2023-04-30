@@ -17,3 +17,6 @@
 #pragma once
 
 // place overrides here
+//
+//
+#define MIDI_BASIC

@@ -9,10 +9,12 @@ void todo_init(char* data, int buffer_size){
 }
 
 void todo_handle_input(uint16_t keycode, keyrecord_t *record){
-
-    if (record->event.pressed){
-        buffer[0] = keycode;
+    if(keycode > 4 && keycode < 29) {
+        if (record->event.pressed){
+            buffer[0] = keycode + 93;
+        }
     }
+
 }
 
 void todo_render(void){

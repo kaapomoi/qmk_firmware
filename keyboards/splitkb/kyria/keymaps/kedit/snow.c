@@ -46,7 +46,7 @@ void snow_init(uint32_t seed){
         wind.acc = fvec2(0,0);
         wind.vel = fvec2(0,0);
         initialized = 1;
-    }  
+    }
 }
 
 void snow_animate(void){
@@ -59,14 +59,14 @@ void snow_animate(void){
     {
         float effectiveness = rand()% VARIANCE * 0.1f;
         fvec2_t old_pos = flakes[i].pos;
-        
+
         flakes[i].vel.x += effectiveness * windv.x * 0.5f * DELTATIME / flakes[i].mass;
         flakes[i].vel.y += effectiveness * windv.y * 0.2f * DELTATIME / flakes[i].mass;
 
         flakes[i].vel.y += G * flakes[i].mass * 0.005f * DELTATIME;
         flakes[i].pos.x += flakes[i].vel.x * DELTATIME;
         flakes[i].pos.y += flakes[i].vel.y * DELTATIME;
-        
+
         oled_write_pixel(round_f(old_pos.x), round_f(old_pos.y), false);
         if (flakes[i].pos.x < 0){
             flakes[i].pos.x = MAX_X;

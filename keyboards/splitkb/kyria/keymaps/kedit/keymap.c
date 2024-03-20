@@ -14,8 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include "quantum/raw_hid.h"
 
 #include <timer.h>
+#include <string.h>
 #include "snow.h"
 #include "todo.h"
 #include "etch.h"
@@ -186,7 +188,9 @@ enum custom_keycodes {
     K_RGBE,
     K_COLN,
     K_LENC,
-    K_RENC
+    K_RENC,
+    HI_OFF,
+    HI_ON
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -239,7 +243,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |        |   0  |  4   |  5   |  6   |      |                              | Left | Down |  Up  | Right|      |  PgUp  |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        | END  |  1   |  2   |  3   | End  |      |      |  |      |      |      |      |      |      |      |  PgDn  |
+ * |        | END  |  1   |  2   |  3   | End  |      | HID T|  |      |      |      |      |      |      |      |  PgDn  |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        | LENC |  0   |      |      |      |  |      |      |      |      | RENC |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -248,7 +252,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NUMBERS_AND_NAV] = LAYOUT(
       _______,  KC_INS,   FI_7,   FI_8,   FI_9, _______,                                     _______, _______, _______, _______, _______, _______,
       _______,    FI_0,   FI_4,   FI_5,   FI_6, _______,                                     KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, _______, KC_PGUP,
-      _______, KC_HOME,   FI_1,   FI_2,   FI_3,  KC_END, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_PGDN,
+      _______, KC_HOME,   FI_1,   FI_2,   FI_3,  KC_END, HI_OFF , HI_ON, _______, _______, _______, _______, _______, _______, _______, KC_PGDN,
                          K_LENC, FI_0, _______, _______, _______, _______, _______, _______, _______, K_RENC
     ),
 
@@ -432,6 +436,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 renc_pressed();
             }
             break;
+        case HI_OFF:
+            {
+                if (record->event.pressed)
+                {
+                    char strr[] = "OFF";
+                    uint8_t hid_size = 32;
+                    uint8_t hid_data[hid_size];
+                    memset(hid_data, 0, hid_size);
+                    memcpy(hid_data, strr, strlen(strr) + 1);
+
+                    raw_hid_send(hid_data, hid_size);
+                }
+            break;
+            }
+        case HI_ON:
+            {
+                if (record->event.pressed)
+                {
+                    char strr[] = "ON";
+                    uint8_t hid_size = 32;
+                    uint8_t hid_data[hid_size];
+                    memset(hid_data, 0, hid_size);
+                    memcpy(hid_data, strr, strlen(strr) + 1);
+
+                    raw_hid_send(hid_data, hid_size);
+                }
+            break;
+            }
         }
 
     return true;
@@ -666,3 +698,4 @@ void renc_cw(void){
         break;
     }
 }
+

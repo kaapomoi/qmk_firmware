@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <stdio.h>
 #include QMK_KEYBOARD_H
 #include "quantum/raw_hid.h"
 
@@ -152,6 +153,7 @@ void renc_c(void);
 void renc_cw(void);
 
 volatile uint16_t frame_timer = 0;
+unsigned int keys_pressed = 0;
 
 uint8_t should_reset_etch = 0;
 
@@ -466,6 +468,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
         }
 
+    if (record->event.pressed){
+        keys_pressed++;
+    }
+
     return true;
 };
 
@@ -569,6 +575,9 @@ bool oled_task_user(void) {
             render_sakura();
             snow_animate();
             frame_timer = timer_read32();
+            char keys_pressed_hex_str[16];
+            sprintf(keys_pressed_hex_str, "%x", keys_pressed);
+            oled_write(keys_pressed_hex_str, false);
         }
 
     } else {

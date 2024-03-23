@@ -7,7 +7,7 @@ int g_cursor = 0;
 char g_buffer[MAX_BUFFER_SIZE];
 
 void todo_init(void) {
-    memset(g_buffer, '.', MAX_BUFFER_SIZE - 1);
+    //memset(g_buffer, '.', MAX_BUFFER_SIZE - 1);
 }
 
 int move_and_clamp_cursor(int cursor, int amount) {
@@ -84,7 +84,7 @@ bool todo_handle_input(uint16_t keycode, keyrecord_t *record) {
                (keycode >= TC_OBRA && keycode <= TC_GRAV) ||
                (keycode >= TC_OBRE && keycode <= TC_TILD)) {
         if (record->event.pressed) {
-            g_buffer[g_cursor] = keycode; 
+            g_buffer[g_cursor] = keycode;
             g_cursor = move_and_clamp_cursor(g_cursor, 1);
         }
     } else {
